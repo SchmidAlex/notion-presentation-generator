@@ -8,21 +8,12 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .controls {
-      margin-bottom: 20px;
-    }
-    .controls input, .controls select {
-      margin-right: 10px;
-    }
-    .reveal {
-      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <div>
+  <button id="reveal-initialize">initialize reveal</button>
+  <div style="height: 100vh;">
     <div class="reveal">
       <div class="slides">
         <!-- Slides will be dynamically generated here -->
@@ -31,5 +22,29 @@
   </div>
   <script src="node_modules/reveal.js/dist/reveal.js"></script>
   <script src="node_modules/reveal.js/plugin/markdown/markdown.js"></script>
+  <script>
+    document.getElementById('reveal-initialize').addEventListener('click', () => {
+      document.getElementById('reveal-initialize').style.display = 'none';
+      Reveal.initialize({
+        // margin: 1,
+        plugins: [ RevealMarkdown ],
+        // controls: true,
+        // controlsLayout: 'bottom-right',
+        // controlsBackArrows: 'faded',
+        // progress: true,
+        // slideNumber: true,
+        // keyboard: true,
+        // overview: true,
+        // center: true,
+        // loop: false,
+        // navigationMode: 'default',
+        // shuffle: false,
+        // autoAnimate: true,
+        // autoAnimateEasing: 'ease',
+        // autoAnimateDuration: 1.0,
+        // autoAnimateUnmatched: true,
+      });
+    });
+  </script>
 </body>
 </html>

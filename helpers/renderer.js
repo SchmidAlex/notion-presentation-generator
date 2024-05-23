@@ -22,8 +22,9 @@ document.getElementById('generate-presentation').addEventListener('click', async
   const content = await getPageContent(pageId);
   const markdown = convertToMarkdown(content);
   console.log(markdown);
-  const slidesContent = await generateSlides(markdown);
-  window.api.openPresentation(await slidesContent);
+  const slidesContent = generateSlides(markdown);
+
+  window.api.openPresentation(slidesContent);
 });
 
 document.getElementById('save-presentation').addEventListener('click', () => {
@@ -36,25 +37,25 @@ async function loadPresentation() {
   const slidesContent = await window.api.loadPresentation();
   if (slidesContent) {
     document.querySelector('.slides').innerHTML = slidesContent;
-    Reveal.initialize({
-      margin: 1,
-      plugins: [ RevealMarkdown ],
-      controls: true,
-      controlsLayout: 'bottom-right',
-      controlsBackArrows: 'faded',
-      progress: true,
-      slideNumber: true,
-      keyboard: true,
-      overview: true,
-      center: true,
-      loop: false,
-      navigationMode: 'default',
-      shuffle: false,
-      autoAnimate: true,
-      autoAnimateEasing: 'ease',
-      autoAnimateDuration: 1.0,
-      autoAnimateUnmatched: true,
-    });
+    // Reveal.initialize({
+    //   margin: 1,
+    //   plugins: [ RevealMarkdown ],
+    //   controls: true,
+    //   controlsLayout: 'bottom-right',
+    //   controlsBackArrows: 'faded',
+    //   progress: true,
+    //   slideNumber: true,
+    //   keyboard: true,
+    //   overview: true,
+    //   center: true,
+    //   loop: false,
+    //   navigationMode: 'default',
+    //   shuffle: false,
+    //   autoAnimate: true,
+    //   autoAnimateEasing: 'ease',
+    //   autoAnimateDuration: 1.0,
+    //   autoAnimateUnmatched: true,
+    // });
   }
 }
 
@@ -281,25 +282,25 @@ function generateSlides(notionContent) {
   return slidesContainer.innerHTML;
 
   // Initialize Reveal.js
-  Reveal.initialize({
-    margin: 1,
-    plugins: [ RevealMarkdown ],
-    controls: true,
-    controlsLayout: 'bottom-right',
-    controlsBackArrows: 'faded',
-    progress: true,
-    slideNumber: true,
-    keyboard: true,
-    overview: true,
-    center: true,
-    loop: false,
-    navigationMode: 'default',
-    shuffle: false,
-    autoAnimate: true,
-    autoAnimateEasing: 'ease',
-    autoAnimateDuration: 1.0,
-    autoAnimateUnmatched: true,
-  });
+  // Reveal.initialize({
+  //   margin: 1,
+  //   plugins: [ RevealMarkdown ],
+  //   controls: true,
+  //   controlsLayout: 'bottom-right',
+  //   controlsBackArrows: 'faded',
+  //   progress: true,
+  //   slideNumber: true,
+  //   keyboard: true,
+  //   overview: true,
+  //   center: true,
+  //   loop: false,
+  //   navigationMode: 'default',
+  //   shuffle: false,
+  //   autoAnimate: true,
+  //   autoAnimateEasing: 'ease',
+  //   autoAnimateDuration: 1.0,
+  //   autoAnimateUnmatched: true,
+  // });
 }
 
 async function getAllPages() {

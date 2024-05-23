@@ -46,11 +46,14 @@ ipcMain.handle('load-presentation', () => {
   return null;
 });
 
-ipcMain.handle('open-presentation', (event, slidesContent) => {
+ipcMain.handle('open-presentation', (event, htmlSlidesContent) => {
   const presentationWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
+      contextIsolation: true,
+      enableRemoteModule: true,
+      sandbox: false,
       nodeIntegration: true
     }
   });
@@ -58,33 +61,15 @@ ipcMain.handle('open-presentation', (event, slidesContent) => {
   presentationWindow.loadFile('presentationWindow.html');
 
   presentationWindow.webContents.on('dom-ready', async () => {
-    const cleanedSlidesContent = slidesContent.replace(/'/g, "\\'");
-    console.log(slidesContent);
-    presentationWindow.webContents.executeJavaScript(`
-      document.querySelector('.slides').innerHTML = '${cleanedSlidesContent}';
-      Reveal.initialize({
-        margin: 1,
-        plugins: [ RevealMarkdown ],
-        controls: true,
-        controlsLayout: 'bottom-right',
-        controlsBackArrows: 'faded',
-        progress: true,
-        slideNumber: true,
-        keyboard: true,
-        overview: true,
-        center: true,
-        loop: false,
-        navigationMode: 'default',
-        shuffle: false,
-        autoAnimate: true,
-        autoAnimateEasing: 'ease',
-        autoAnimateDuration: 1.0,
-        autoAnimateUnmatched: true,
-      });
-    `);
-  });
-
-  presentationWindow.on('closed', () => {
-    presentationWindow = null;
+    presentationWindow.focus();
+    const sanitizedContent = JSON.stringify(htmlSlidesContent);
+    //presentationWindow.webContents.executeJavaScript('console.log(document.querySelector(\'.slides\').innerHTML)');
+    //presentationWindow.webContents.executeJavaScript('console.log(' + sanitizedContent + ');');
+    try {
+      presentationWindow.webContents.executeJavaScript('document.querySelector(\'.slides\').innerHTML = ' + sanitizedContent);
+      //presentationWindow.webContents.executeJavaScript('Reveal.initialize({margin: 1, plugins: [ RevealMarkdown ], controls: true, controlsLayout: \'bottom-right\', controlsBackArrows: \'faded\', progress: true, slideNumber: true, keyboard: true, overview: true, center: true, loop: false, navigationMode: \'default\', shuffle: false, autoAnimate: true, autoAnimateEasing: \'ease\', autoAnimateDuration: 1.0, autoAnimateUnmatched: true});');
+    } catch (error) {
+      console.error("An error occoured while setting content and initiate reveal on presentationwindow: ", error);
+    }
   });
 });
