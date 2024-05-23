@@ -1,0 +1,21 @@
+{
+  "name": "notion-presentation-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^30.0.6"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15",
+    "electron-store": "^8.2.0",
+    "reveal.js": "^5.1.0"
+  }
+}
