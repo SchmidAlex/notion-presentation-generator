@@ -51,7 +51,9 @@ This Electron application allows you to generate dynamic presentations from Noti
     - The presentation will open in a new window.
     - Click in the new window on the button "initialize reveal" to, yes you name it, initialize reveal.
 6. **Save and Load Presentation:**
-    - It is not implemented yet, but i plan to let you save and load presentations from locally, so you can even use the app without internet.
+    - Just click on save presentation when a presentation is currently loaded... there is no check if one is loaded or not. Give that html a name and a place to rest.
+    - Just click on laod presentation and get the .html you want to load as presentation... there is no check if the loaded one is correct how it should be.
+    - You can edit the saved files to make the presentation fancy.
 
 ## Dependencies
 - Electron: Build cross-platform desktop apps with JavaScript, HTML, and CSS.
