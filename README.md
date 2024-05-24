@@ -13,7 +13,7 @@ This Electron application allows you to generate dynamic presentations from Noti
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/notion-to-reveal-presentation.git
+   git clone https://github.com/SchmidAlex/notion-presentation-generator.git
    cd notion-to-reveal-presentation
    ```
 
