@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('api', {
   getSecret: (key) => store.get(key),
   setSecret: (key, value) => store.set(key, value),
   savePresentation: (slidesContent) => ipcRenderer.invoke('save-presentation', slidesContent),
-  loadPresentation: () => ipcRenderer.invoke('load-presentation'),
+  openStoredPresentation: () => ipcRenderer.invoke('open-stored-presentation'),
   createNotionClient: (apiKey) => new Client({ auth: apiKey }),
   openPresentation: (htmlSlidesContent) => ipcRenderer.invoke('open-presentation', htmlSlidesContent)
 });

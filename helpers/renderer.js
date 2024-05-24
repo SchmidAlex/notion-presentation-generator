@@ -33,31 +33,14 @@ document.getElementById('save-presentation').addEventListener('click', () => {
 });
 
 
-async function loadPresentation() {
-  const slidesContent = await window.api.loadPresentation();
+document.getElementById('open-stored-presentation').addEventListener('click', async () => {
+  const slidesContent = await window.api.openStoredPresentation();
   if (slidesContent) {
-    document.querySelector('.slides').innerHTML = slidesContent;
-    // Reveal.initialize({
-    //   margin: 1,
-    //   plugins: [ RevealMarkdown ],
-    //   controls: true,
-    //   controlsLayout: 'bottom-right',
-    //   controlsBackArrows: 'faded',
-    //   progress: true,
-    //   slideNumber: true,
-    //   keyboard: true,
-    //   overview: true,
-    //   center: true,
-    //   loop: false,
-    //   navigationMode: 'default',
-    //   shuffle: false,
-    //   autoAnimate: true,
-    //   autoAnimateEasing: 'ease',
-    //   autoAnimateDuration: 1.0,
-    //   autoAnimateUnmatched: true,
-    // });
+    window.api.openPresentation(slidesContent);
+  } else{
+    console.error("Error loading presentation");
   }
-}
+});
 
 async function loadNotionPages() {
   const results = await getAllPages();
@@ -280,27 +263,6 @@ function generateSlides(notionContent) {
   slidesContainer.appendChild(section);
 
   return slidesContainer.innerHTML;
-
-  // Initialize Reveal.js
-  // Reveal.initialize({
-  //   margin: 1,
-  //   plugins: [ RevealMarkdown ],
-  //   controls: true,
-  //   controlsLayout: 'bottom-right',
-  //   controlsBackArrows: 'faded',
-  //   progress: true,
-  //   slideNumber: true,
-  //   keyboard: true,
-  //   overview: true,
-  //   center: true,
-  //   loop: false,
-  //   navigationMode: 'default',
-  //   shuffle: false,
-  //   autoAnimate: true,
-  //   autoAnimateEasing: 'ease',
-  //   autoAnimateDuration: 1.0,
-  //   autoAnimateUnmatched: true,
-  // });
 }
 
 async function getAllPages() {
@@ -324,6 +286,3 @@ async function getAllPages() {
   }
   return pages;
 }
-
-// Load the presentation when the app starts
-loadPresentation();

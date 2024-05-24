@@ -26,23 +26,22 @@
     document.getElementById('reveal-initialize').addEventListener('click', () => {
       document.getElementById('reveal-initialize').style.display = 'none';
       Reveal.initialize({
-        // margin: 1,
         plugins: [ RevealMarkdown ],
-        // controls: true,
-        // controlsLayout: 'bottom-right',
-        // controlsBackArrows: 'faded',
-        // progress: true,
-        // slideNumber: true,
-        // keyboard: true,
-        // overview: true,
-        // center: true,
-        // loop: false,
-        // navigationMode: 'default',
-        // shuffle: false,
-        // autoAnimate: true,
-        // autoAnimateEasing: 'ease',
-        // autoAnimateDuration: 1.0,
-        // autoAnimateUnmatched: true,
+        controls: true,
+        controlsLayout: 'bottom-right',
+        controlsBackArrows: 'faded',
+        progress: true,
+        slideNumber: false,
+        keyboard: true,
+        overview: true,
+        center: true,
+        loop: false,
+        navigationMode: 'default',
+        shuffle: false,
+        autoAnimate: true,
+        autoAnimateEasing: 'ease',
+        autoAnimateDuration: 1.0,
+        autoAnimateUnmatched: true,
       });
     });
   </script>

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -32,18 +32,39 @@ app.on('window-all-closed', () => {
 });
 
 // Handle saving presentation
-ipcMain.handle('save-presentation', (event, slidesContent) => {
-  const filePath = path.join(app.getPath('userData'), 'presentation.html');
-  fs.writeFileSync(filePath, slidesContent);
+ipcMain.handle('save-presentation', async (event, slidesContent) => {
+  const {canceled, filePath} = await dialog.showSaveDialog({
+    title: 'Save Presentation',
+    filters: [
+      { name: 'HTML Files', extensions: ['html']},
+      { name: 'All Files', extensions: ['*']}
+    ]
+  });
+
+  if (!canceled && filePath){
+    fs.writeFileSync(filePath, slidesContent);
+    return filePath;
+  } else {
+    return null;
+  }
 });
 
 // Handle loading presentation
-ipcMain.handle('load-presentation', () => {
-  const filePath = path.join(app.getPath('userData'), 'presentation.html');
-  if (fs.existsSync(filePath)) {
-    return fs.readFileSync(filePath, 'utf-8');
+ipcMain.handle('open-stored-presentation', async () => {
+  const {canceled, filePaths} = await dialog.showOpenDialog({
+    title: 'Load Presentation',
+    filters: [
+      { name: 'HTML Files', extensions: ['html']},
+      { name: 'All Files', extensions: ['*']}
+    ],
+    properties: ['openFile']
+  });
+
+  if (!canceled && filePaths.length > 0 && fs.existsSync(filePaths[0])){
+    return fs.readFileSync(filePaths[0], 'utf-8');
+  } else {
+    return false;
   }
-  return null;
 });
 
 ipcMain.handle('open-presentation', (event, htmlSlidesContent) => {
@@ -63,11 +84,8 @@ ipcMain.handle('open-presentation', (event, htmlSlidesContent) => {
   presentationWindow.webContents.on('dom-ready', async () => {
     presentationWindow.focus();
     const sanitizedContent = JSON.stringify(htmlSlidesContent);
-    //presentationWindow.webContents.executeJavaScript('console.log(document.querySelector(\'.slides\').innerHTML)');
-    //presentationWindow.webContents.executeJavaScript('console.log(' + sanitizedContent + ');');
     try {
       presentationWindow.webContents.executeJavaScript('document.querySelector(\'.slides\').innerHTML = ' + sanitizedContent);
-      //presentationWindow.webContents.executeJavaScript('Reveal.initialize({margin: 1, plugins: [ RevealMarkdown ], controls: true, controlsLayout: \'bottom-right\', controlsBackArrows: \'faded\', progress: true, slideNumber: true, keyboard: true, overview: true, center: true, loop: false, navigationMode: \'default\', shuffle: false, autoAnimate: true, autoAnimateEasing: \'ease\', autoAnimateDuration: 1.0, autoAnimateUnmatched: true});');
     } catch (error) {
       console.error("An error occoured while setting content and initiate reveal on presentationwindow: ", error);
     }
