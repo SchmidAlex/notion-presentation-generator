@@ -163,7 +163,7 @@ function convertToMarkdown(content) {
         break;
           
       case 'code':
-        markdown += '```\n' + text + '\n';
+        markdown += '```\n' + text + '\n```\n';
         break;
 
       case 'child_page':
