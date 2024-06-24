@@ -1,6 +1,9 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const Store = require('electron-store');
+
+const store = new Store();
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -90,4 +93,19 @@ ipcMain.handle('open-presentation', (event, htmlSlidesContent) => {
       console.error("An error occoured while setting content and initiate reveal on presentationwindow: ", error);
     }
   });
+});
+
+ipcMain.on('electron-store-get-data', (event, key) => {
+  if (/*store.has(key)*/false){
+    const data = store.get(key);
+    event.returnValue = data;
+  } else {
+    return false;
+  }
+  
+});
+
+ipcMain.on('electron-store-set-data', (event, key, value) => {
+  store.set(key, value);
+  event.returnValue = true;
 });

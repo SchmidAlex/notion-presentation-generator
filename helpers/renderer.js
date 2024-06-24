@@ -2,7 +2,8 @@ let notion;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const apiKey = window.api.getSecret('notion_api_key');
-  if (apiKey) {
+  console.log(typeof apiKey);
+  if (typeof apiKey === 'string') {
     document.getElementById('api-key-section').style.display = 'none';
     notion = window.api.createNotionClient(apiKey);
     await loadNotionPages();
@@ -163,6 +164,7 @@ function convertToMarkdown(content) {
         break;
           
       case 'code':
+        console.log(block);
         markdown += '```\n' + text + '\n```\n';
         break;
 
