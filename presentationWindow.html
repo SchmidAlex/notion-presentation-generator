@@ -47,9 +47,6 @@
   <link rel="stylesheet" src="helpers/plugins/chalkboard/all.min.css">
   <script src="helpers/plugins/chalkboard/chalkboardPlugin.js"></script>
 
-  <!-- RevealEmbedTweet Plugin -->
-
-
   <!-- RevealChart Plugin -->
   <script src="helpers/plugins/chart/plugin.js"></script>
   <script src="helpers/plugins/chart/chart.min.js"></script>
@@ -68,6 +65,17 @@
 
   <!-- Verticator Plugin -->
   <script src="node_modules/reveal.js-verticator/plugin/verticator/verticator.js"></script>
+
+  <!-- 
+    An list of interesting Plugins for later use maybe:
+      - RevealEmbedTweet
+      - Seminar (https://github.com/rajgoel/reveal.js-plugins/tree/master/seminar)
+      - Poll (https://github.com/rajgoel/reveal.js-plugins/tree/master/poll) -> Based on seminar
+      - Questions (https://github.com/rajgoel/reveal.js-plugins/tree/master/questions) -> Based on questions
+      - RevealEditor (https://github.com/ctangel/RevealEditor)
+      - CopyCode (https://github.com/Martinomagnifico/reveal.js-copycode)
+
+  -->
 
   
   <script>
@@ -258,7 +266,6 @@
 
       Reveal.on('ready', () => {
         document.querySelectorAll('pre code').forEach((el) =>{
-        console.log(el);
         hljs.highlightElement(el);
       }); 
       });

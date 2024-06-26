@@ -132,7 +132,25 @@ function convertToMarkdown(content) {
 
   content.blocks.forEach(block => {
     let text = '';
+    console.log(block);
     block[block.type]?.rich_text?.forEach(blockText => {
+      if (blockText.annotations) {
+        if (blockText.annotations.bold){
+          text += "**" + blockText.plain_text + "**";
+        } else if (blockText.annotations.code){
+          text += "`" + blockText.plain_text + "`";
+        } else if (blockText.annotations.color){
+          //tbh idk
+          text += blockText.plain_text;
+        } else if (blockText.annotations.italic){
+          text += "*" + blockText.plain_text + "*";
+        } else if (blockText.annotations.strikethrough){
+          text += "~~" + blockText.plain_text + "~~";
+        } else if (blockText.annotations.underline){
+          //markdown does not have defined syntax to underline text
+          text += blockText.plain_text;
+        }
+      }
       text += blockText.plain_text;
     });
 
@@ -170,7 +188,6 @@ function convertToMarkdown(content) {
         break;
           
       case 'code':
-        console.log(block);
         markdown += '```' + block.code.language + '\n' + text + '\n```\n';
         break;
 
