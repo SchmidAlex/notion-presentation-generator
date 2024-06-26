@@ -16,6 +16,7 @@
   "dependencies": {
     "@notionhq/client": "^2.2.15",
     "electron-store": "^8.2.0",
+    "highlight.js": "^11.9.0",
     "reveal.js": "^5.1.0",
     "reveal.js-menu": "^2.1.0",
     "reveal.js-verticator": "^1.2.5"

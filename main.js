@@ -95,17 +95,17 @@ ipcMain.handle('open-presentation', (event, htmlSlidesContent) => {
   });
 });
 
-ipcMain.on('electron-store-get-data', (event, key) => {
-  if (/*store.has(key)*/false){
+ipcMain.handle('electron-store-get-data', (event, key) => {
+  if (store.has(key)){
     const data = store.get(key);
-    event.returnValue = data;
+    return data;
   } else {
     return false;
   }
   
 });
 
-ipcMain.on('electron-store-set-data', (event, key, value) => {
+ipcMain.handle('electron-store-set-data', (event, key, value) => {
   store.set(key, value);
-  event.returnValue = true;
+  return true;
 });

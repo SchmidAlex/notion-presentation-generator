@@ -1,13 +1,12 @@
 const { contextBridge, ipcRenderer } = require('electron');
 const { Client } = require('@notionhq/client');
+const Store = require('electron-store');
+
+const store = new Store();
 
 contextBridge.exposeInMainWorld('api', {
-  getSecret: (key) => {
-    const result = ipcRenderer.sendSync('electron-store-get-data', key);
-    console.log(result);
-    return result;
-  },
-  setSecret: (key, value) => ipcRenderer.sendSync('electron-store-set-data', key, value),
+  getSecret: (key) => ipcRenderer.invoke('electron-store-get-data', key),
+  setSecret: (key, value) => store.set(key, value),
   savePresentation: (slidesContent) => ipcRenderer.invoke('save-presentation', slidesContent),
   openStoredPresentation: () => ipcRenderer.invoke('open-stored-presentation'),
   createNotionClient: (apiKey) => new Client({ auth: apiKey }),

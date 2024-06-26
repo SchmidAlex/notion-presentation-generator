@@ -5,6 +5,7 @@
   <title>Electron Presentation App</title>
   <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
   <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/league.css">
+  <link rel="stylesheet" href="node_modules/reveal.js/plugin/highlight/zenburn.css">
   <link rel="stylesheet" href="helpers/plugins/chalkboard/chalkboardStyle.css">
   <link rel="stylesheet" href="helpers/plugins/chalkboard/fontawesome.css">
   <link rel="stylesheet" href="helpers/plugins/customcontrols/customcontrolsStyle.css">
@@ -26,11 +27,15 @@
 
   <!-- Builtin Reveal Plugins -->
   <script src="node_modules/reveal.js/dist/reveal.js"></script>
-  <script src="node_modules/reveal.js/plugin/notes/notes.js"></script>
+  <script src="node_modules/reveal.js/plugin/markdown/markdown.js"></script>
   <script src="node_modules/reveal.js/plugin/highlight/highlight.js"></script>
+  <script src="node_modules/reveal.js/plugin/notes/notes.js"></script>
   <script src="node_modules/reveal.js/plugin/math/math.js"></script>
   <script src="node_modules/reveal.js/plugin/zoom/zoom.js"></script>
   <script src="node_modules/reveal.js/plugin/search/search.js"></script>
+
+  <!-- Since highlight somehow doesnt work with reveal for me, well do it manually... The highlight from Reveal is needed for the language probably -->
+  <script src="helpers/plugins/highlightjs/highlight.min.js"></script>
 
   <!-- RevealAnimate Plugin -->
   <script src="helpers/plugins/animate/loadContent.js"></script>
@@ -48,9 +53,6 @@
   <!-- RevealChart Plugin -->
   <script src="helpers/plugins/chart/plugin.js"></script>
   <script src="helpers/plugins/chart/chart.min.js"></script>
-
-  <!-- RevealMarkdown Plugin -->
-  <script src="node_modules/reveal.js/plugin/markdown/markdown.js"></script>
 
   <!-- RevealMenu Plugin -->
   <script src="node_modules/reveal.js-menu/menu.js"></script>
@@ -102,6 +104,7 @@
       // Also available as an ES module, see:
 		// https://revealjs.com/initialization/
       Reveal.initialize({
+        plugins: plugins,
         controls: true,
         controlsTutorial: true,
         controlsLayout: 'bottom-right',
@@ -169,62 +172,15 @@
         minScale: 0.2,
         maxScale: 2,
         disableLayout: false,
-
-        audio: {
-          prefix: 'audio/', // audio files are stored in the "audio" folder
-          suffix: '.ogg', // audio files have the ".ogg" ending
-          textToSpeechURL: null, // the URL to the text to speech converter
-          defaultNotes: false, // use slide notes as default for the text to speech converter
-          defaultText: false, // use slide text as default for the text to speech converter
-          advance: 0, // advance to next slide after given time in milliseconds after audio has played, use negative value to not advance
-          autoplay: false, // automatically start slideshow
-          defaultDuration: 5, // default duration in seconds if no audio is available
-          defaultAudios: true, // try to play audios with names such as audio/1.2.ogg
-          playerOpacity: 0.05, // opacity value of audio player if unfocused
-          playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
-          startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
-        },
-        
-        chalkboard: { // font-awesome.min.css must be available
-          //src: "chalkboard/chalkboard.json",
+        chalkboard: {
           storage: "chalkboard",
         },
-        
-        customcontrols: {
-            controls: [
-                    {
-                id: 'toggle-overview',
-                title: 'Toggle overview (O)',
-                icon: '<i class="fa fa-th"></i>',
-                action: 'Reveal.toggleOverview();'
-              }
-              ,
-        {
-          icon: '<i class="fa fa-pen-square"></i>',
-          title: 'Toggle chalkboard (B)',
-          action: 'RevealChalkboard.toggleChalkboard();'
+        highlight: {
+          highlightOnLoad: true,
+          lineNumbers: true
         },
-        {
-          icon: '<i class="fa fa-pen"></i>',
-          title: 'Toggle notes canvas (C)',
-          action: 'RevealChalkboard.toggleNotesCanvas();'
-        }
-        
-          ]
-        },
-        chart: {
-            defaults: { 
-              color: 'lightgray', // color of labels
-              scale: { 
-                beginAtZero: true, 
-                ticks: { stepSize: 1 },
-                grid: { color: "lightgray" } , // color of grid lines
-              },
-            },
-            line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] }, 
-            bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
-            pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
-            radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+        markdown: {
+          smartypants: true
         },
         math: {
           mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
@@ -247,38 +203,65 @@
             initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} })
           },
         ],
-        // Learn about plugins: https://revealjs.com/plugins/
-        plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins ) 
+        chart: {
+          defaults: { 
+            color: 'lightgray', // color of labels
+            scale: { 
+              beginAtZero: true, 
+              ticks: { stepSize: 1 },
+              grid: { color: "lightgray" } , // color of grid lines
+            },
+          },
+          line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] }, 
+          bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+          pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
+          radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+        },
+        audio: {
+          prefix: 'audio/', // audio files are stored in the "audio" folder
+          suffix: '.ogg', // audio files have the ".ogg" ending
+          textToSpeechURL: null, // the URL to the text to speech converter
+          defaultNotes: false, // use slide notes as default for the text to speech converter
+          defaultText: false, // use slide text as default for the text to speech converter
+          advance: 0, // advance to next slide after given time in milliseconds after audio has played, use negative value to not advance
+          autoplay: false, // automatically start slideshow
+          defaultDuration: 5, // default duration in seconds if no audio is available
+          defaultAudios: true, // try to play audios with names such as audio/1.2.ogg
+          playerOpacity: 0.05, // opacity value of audio player if unfocused
+          playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
+          startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
+        },
+        customcontrols: {
+          controls: [
+                  {
+              id: 'toggle-overview',
+              title: 'Toggle overview (O)',
+              icon: '<i class="fa fa-th"></i>',
+              action: 'Reveal.toggleOverview();'
+            },
+            {
+              icon: '<i class="fa fa-pen-square"></i>',
+              title: 'Toggle chalkboard (B)',
+              action: 'RevealChalkboard.toggleChalkboard();'
+            },
+            {
+              icon: '<i class="fa fa-pen"></i>',
+              title: 'Toggle notes canvas (C)',
+              action: 'RevealChalkboard.toggleNotesCanvas();'
+            }
+          ]
+        }
       });
-			
 
-
-	    // Change chalkboard theme : 
-      function changeTheme(input) {
-        var config = {};
-        config.theme = input.value;
-        Reveal.getPlugin("RevealChalkboard").configure(config);
-        input.blur();
-      }
-
-      // // Handle the message inside the webview
-          // window.addEventListener('message', event => {
-
-          //     const message = event.data; // The JSON data our extension sent
-
-          //     switch (message.command) {
-          //         case 'refactor':
-          //             Reveal.toggleHelp();
-          //     }
-          // });
-
-      if (window.location.search.match(/print-pdf-now/gi)) {
-        setTimeout(() => {
-          window.print();
-        }, 2500);
-      }
-
+      // Fix blurr background because of notescanvas
       document.getElementById("notescanvas").style.visibility = "hidden";
+
+      Reveal.on('ready', () => {
+        document.querySelectorAll('pre code').forEach((el) =>{
+        console.log(el);
+        hljs.highlightElement(el);
+      }); 
+      });
     });
   </script>
 </body>

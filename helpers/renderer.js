@@ -1,28 +1,34 @@
 let notion;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const apiKey = window.api.getSecret('notion_api_key');
-  console.log(typeof apiKey);
-  if (typeof apiKey === 'string') {
-    document.getElementById('api-key-section').style.display = 'none';
-    notion = window.api.createNotionClient(apiKey);
-    await loadNotionPages();
+  try {
+    const apiKey = await window.api.getSecret('notion_api_key');
+    if (typeof apiKey === 'string' && apiKey){
+      document.getElementById('api-key-section').style.display = 'none';
+      notion = window.api.createNotionClient(apiKey);
+      await loadNotionPages();
+    }
+  } catch (error) {
+    console.error('Error fetching API key from electron store: ', error);
   }
 });
 
 document.getElementById('save-key').addEventListener('click', async () => {
   const apiKey = document.getElementById('api-key').value;
-  window.api.setSecret('notion_api_key', apiKey);
-  notion = window.api.createNotionClient(apiKey);
-  document.getElementById('api-key-section').style.display = 'none';
-  await loadNotionPages();
+  try {
+    await window.api.setSecret('notion_api_key', apiKey);
+    notion = window.api.createNotionClient(apiKey);
+    document.getElementById('api-key-section').style.display = 'none';
+    await loadNotionPages();
+  } catch(error){
+    console.error('Error saving API key into electron store: ', error);
+  }
 });
 
 document.getElementById('generate-presentation').addEventListener('click', async () => {
   const pageId = document.getElementById('notion-pages').value;
   const content = await getPageContent(pageId);
   const markdown = convertToMarkdown(content);
-  console.log(markdown);
   const slidesContent = generateSlides(markdown);
 
   window.api.openPresentation(slidesContent);
@@ -165,7 +171,7 @@ function convertToMarkdown(content) {
           
       case 'code':
         console.log(block);
-        markdown += '```\n' + text + '\n```\n';
+        markdown += '```' + block.code.language + '\n' + text + '\n```\n';
         break;
 
       case 'child_page':
