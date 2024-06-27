@@ -1,0 +1,9 @@
+p code{
+    padding: .2em .4em;
+    margin: 0;
+    font-size: 85%;
+    white-space: break-spaces;
+    background-color: #6e768166;
+    border-radius: 6px;
+    color: #ff4d4d;
+}

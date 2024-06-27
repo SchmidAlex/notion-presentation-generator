@@ -132,26 +132,65 @@ function convertToMarkdown(content) {
 
   content.blocks.forEach(block => {
     let text = '';
-    console.log(block);
     block[block.type]?.rich_text?.forEach(blockText => {
+      console.log(blockText);
+      let specialColor = false;
+      let bold = false;
+      let code = false;
+      let italic = false;
+      let strikethrough = false;
+      let underline = false;
       if (blockText.annotations) {
-        if (blockText.annotations.bold){
-          text += "**" + blockText.plain_text + "**";
-        } else if (blockText.annotations.code){
-          text += "`" + blockText.plain_text + "`";
-        } else if (blockText.annotations.color){
-          //tbh idk
-          text += blockText.plain_text;
-        } else if (blockText.annotations.italic){
-          text += "*" + blockText.plain_text + "*";
-        } else if (blockText.annotations.strikethrough){
-          text += "~~" + blockText.plain_text + "~~";
-        } else if (blockText.annotations.underline){
-          //markdown does not have defined syntax to underline text
-          text += blockText.plain_text;
+        if (blockText.annotations.color != "default") {
+          specialColor = true;
+          text += "<span style=\"color:" + blockText.annotations.color + "\">";
         }
+        if (blockText.annotations.bold) {
+          bold = true;
+          text += "**";
+        } 
+        if (blockText.annotations.code) {
+          code = true;
+          text += "`";
+        } 
+        if (blockText.annotations.italic) {
+          italic = true;
+          text += "*";
+        } 
+        if (blockText.annotations.strikethrough) {
+          strikethrough = true;
+          text += "~~";
+        } 
+        if (blockText.annotations.underline) {
+          underline = true;
+          // Markdown does not have a defined syntax to underline text, 
+          // you might want to use HTML tags like <u>...</u>
+          text += "<u>";
+        }
+
+        text += blockText.plain_text;
+
+        if (underline) {
+          text += "</u>";
+        }
+        if (strikethrough) {
+          text += "~~";
+        }
+        if (italic) {
+          text += "*";
+        }
+        if (code) {
+          text += "`";
+        }
+        if (bold) {
+          text += "**";
+        }
+        if (specialColor) {
+          text += "</span>";
+        }
+      } else {
+        text += blockText.plain_text;
       }
-      text += blockText.plain_text;
     });
 
     switch (block.type) {
@@ -245,9 +284,7 @@ function convertToMarkdown(content) {
         break;
 
       case 'paragraph':
-        block.paragraph.rich_text.forEach(richText => {
-          markdown += richText.plain_text;
-        });
+        markdown += text;
         markdown += '\n';
         break;
 
