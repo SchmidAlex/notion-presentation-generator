@@ -2,8 +2,10 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const Store = require('electron-store');
+const { spawn } = require('child_process');
 
 const store = new Store();
+let seminarServer;
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -29,6 +31,11 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
+  if (seminarServer) {
+    seminarServer.kill('SIGTERM');
+    seminarServer = null;
+    console.log('Seminar server stopped')
+  }
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -75,7 +82,7 @@ ipcMain.handle('open-presentation', (event, htmlSlidesContent) => {
     width: 800,
     height: 600,
     webPreferences: {
-      contextIsolation: true,
+      contextIsolation: false,
       enableRemoteModule: true,
       sandbox: false,
       nodeIntegration: true
@@ -108,4 +115,27 @@ ipcMain.handle('electron-store-get-data', (event, key) => {
 ipcMain.handle('electron-store-set-data', (event, key, value) => {
   store.set(key, value);
   return true;
+});
+
+ipcMain.on('start-seminar-server', (event, arg) => {
+  if (!seminarServer) {
+    seminarServer = spawn('node', ['seminar/server.js'], { stdio: 'inherit' });
+    seminarServer.on('close', (code) => {
+      console.log(`Seminar Server exited with code ${code}`);
+    });
+    console.log('Seminar Server started');
+  } else {
+    console.log('Seminar Server is already running');
+  }
+
+  event.reply('seminar-server-started');
+  
+});
+
+ipcMain.on('stop-seminar-server', (event, arg) => {
+  if (seminarServer) {
+    seminarServer.kill('SIGTERM');
+    seminarServer = null;
+    console.log('Seminar server stopped')
+  }
 });

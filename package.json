@@ -24,6 +24,7 @@
     "moment": "^2.30.1",
     "reveal.js": "^5.1.0",
     "reveal.js-menu": "^2.1.0",
+    "reveal.js-plugins": "^4.2.5",
     "reveal.js-verticator": "^1.2.5",
     "socket.io": "^4.7.5"
   }

@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="node_modules/reveal.js/plugin/highlight/zenburn.css">
   <link rel="stylesheet" href="helpers/plugins/chalkboard/chalkboardStyle.css">
   <link rel="stylesheet" href="helpers/plugins/chalkboard/fontawesome.css">
-  <link rel="stylesheet" href="helpers/plugins/customcontrols/customcontrolsStyle.css">
+  <link rel="stylesheet" href="node_modules/reveal.js-plugins/customcontrols/style.css">
 
   <!-- Own CSS to add some styling-->
   <link rel="stylesheet" href="presentationWindow.css">
@@ -19,7 +19,20 @@
   </style>
 </head>
 <body>
-  <button id="reveal-initialize">initialize reveal</button>
+  <button id="reveal-initialize">Initialize Reveal</button>
+  <button id="start-seminar-server">Start Seminar Server</button>
+  <button id="stop-seminar-server">Stop Seminar Server</button>
+  <div id="seminar-config" class="seminar-config" style="display: none;">
+    <br><p>Please get informations like the hash from: <a href="http://127.0.0.1:4433/">http://127.0.0.1:4433/</a></p>
+    <p id="seminar-error" style="display: none; color:red;">make sure you filled out every field properly</p>
+    <label for="server">Server IP:</label><br>
+    <input type="text" id="server" name="server"><br>
+    <label for="room">Room Name:</label><br>
+    <input type="text" id="room" name="room"><br><br>
+    <label for="hash">Hash:</label><br>
+    <input type="text" id="hash" name="hash"><br><br>
+    <input type="submit" value="Submit" id="submit-seminar-config">
+  </div>
   <div style="height: 100vh;">
     <div class="reveal">
       <div class="slides">
@@ -41,9 +54,8 @@
   <script src="helpers/plugins/highlightjs/highlight.min.js"></script>
 
   <!-- RevealAnimate Plugin -->
-  <script src="helpers/plugins/animate/loadContent.js"></script>
-  <script src="helpers/plugins/animate/revealAnimate.js"></script>
-  <script src="helpers/plugins/animate/svg.min.js"></script>
+  <script src="node_modules/reveal.js-plugins/animate/plugin.js"></script>
+  <script src="node_modules/reveal.js-plugins/animate/svg.min.js"></script>
 
   <!-- RevealChalkboard Plugin -->
   <script src="helpers/plugins/chalkboard/all.min.js"></script>
@@ -58,16 +70,20 @@
   <script src="node_modules/reveal.js-menu/menu.js"></script>
 
   <!-- RevealFullscreen Plugin -->
-  <script src="helpers/plugins/fullscreen/plugin.js"></script>
+  <script src="node_modules/reveal.js-plugins/fullscreen/plugin.js"></script>
 
   <!-- RevealAnything Plugin -->
-  <script src="helpers/plugins/anything/plugin.js"></script>
+  <script src="node_modules/reveal.js-plugins/anything/plugin.js"></script>
 
   <!-- RevealCustomControls Plugin -->
-  <script src="helpers/plugins/customcontrols/customcontrolsPlugin.js"></script>
+  <script src="node_modules/reveal.js-plugins/customcontrols/plugin.js"></script>
 
   <!-- Verticator Plugin -->
   <script src="node_modules/reveal.js-verticator/plugin/verticator/verticator.js"></script>
+
+  <!-- Seminar Plugin -->
+   <script src="node_modules/reveal.js-plugins/seminar/plugin.js"></script>
+   <script src="node_modules/socket.io/client-dist/socket.io.js"></script>
 
   <!-- 
     An list of interesting Plugins for later use maybe:
@@ -82,8 +98,42 @@
 
   
   <script>
+    const { ipcRenderer } = require('electron');
+
+    document.getElementById('start-seminar-server').addEventListener('click', () => {
+      ipcRenderer.send('start-seminar-server');
+    });
+    
+    document.getElementById('stop-seminar-server').addEventListener('click', () => {
+      ipcRenderer.send('stop-seminar-server');
+    });
+
+    ipcRenderer.on('seminar-server-started', (event) => {
+      document.getElementById('seminar-config').style.display = 'block';
+    });
+
+    let seminarConfig = false;
+    let seminarServer = '';
+    let seminarRoom = '';
+    let seminarHash = '';
+    document.getElementById('submit-seminar-config').addEventListener('click', () => {
+      seminarServer = document.getElementById('server').value;
+      seminarRoom = document.getElementById('room').value;
+      seminarHash = document.getElementById('hash').value;
+      if (seminarServer && seminarRoom && seminarHash) {
+        seminarConfig = true;
+        document.getElementById('seminar-config').style.display = 'none';
+        document.getElementById('seminar-error').style.display = 'none';
+      } else {
+        document.getElementById('seminar-error').style.display = 'block';
+      }
+    });
+
     document.getElementById('reveal-initialize').addEventListener('click', () => {
       document.getElementById('reveal-initialize').style.display = 'none';
+      document.getElementById('start-seminar-server').style.display = 'none';
+      document.getElementById('stop-seminar-server').style.display = 'none';
+      document.getElementById('seminar-config').style.display = 'none';
 
       const printPlugins = [
         RevealNotes,
@@ -111,6 +161,10 @@
         // seminar
         Verticator 
       ]
+
+      if (seminarConfig) {
+        plugins.push(RevealSeminar);
+      }
 
       // Also available as an ES module, see:
 		// https://revealjs.com/initialization/
@@ -261,6 +315,12 @@
               action: 'RevealChalkboard.toggleNotesCanvas();'
             }
           ]
+        },
+        seminar: {
+          server: seminarServer,
+          room: seminarRoom,
+          hash: seminarHash,
+          autoJoin: true
         }
       });
 
