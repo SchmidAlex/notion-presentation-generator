@@ -316,7 +316,7 @@ console.log(`${socket.id} leaves room "${rooms[i].venue}|${rooms[i].name}|${room
 	});
 
 	socket.on('checkout', () => {
-console.log(`${socket.id} checked out`);
+		console.log(`${socket.id} checked out`);
 		leaveAllRooms(socket.id);
 		deleteUser(socket.id);
 	});
@@ -343,7 +343,7 @@ console.log(`${socket.id} checked out`);
 			if ( callback ) callback("Room not found");
 			return false;
 		}
-console.log(`${socket.id} sends message to "${recipient}"`, content);
+		console.log(`${socket.id} sends message to "${recipient}"`, content);
 		// participants can send messages to all participants in the room
 		sendMessage( 'message', i, recipient, copy, content, callback );
 	});
@@ -357,7 +357,7 @@ console.log(`${socket.id} sends message to "${recipient}"`, content);
 
 		// hosts can send announcements to all participants in the room
 		if ( hosts[i].findIndex(host => host.id === socket.id) !== -1 ) {
-console.log(`${socket.id} makes announcement to "${recipient}"`, content);
+			console.log(`${socket.id} makes announcement to "${recipient}"`, content);
 			sendMessage( 'announcement', i, recipient, copy, content, callback );
 		}
 		else {
@@ -367,9 +367,9 @@ console.log(`${socket.id} makes announcement to "${recipient}"`, content);
 
 	// Runs when client disconnects
 	socket.on('disconnect', () => {
-console.log(`${socket.id} disconnected`);
-		leaveAllRooms(socket.id);
-		deleteUser(socket.id);
+		console.log(`${socket.id} disconnected`);
+				leaveAllRooms(socket.id);
+				deleteUser(socket.id);
 	});
 });
 

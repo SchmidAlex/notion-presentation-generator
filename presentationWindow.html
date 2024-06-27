@@ -31,6 +31,8 @@
     <input type="text" id="room" name="room"><br><br>
     <label for="hash">Hash:</label><br>
     <input type="text" id="hash" name="hash"><br><br>
+    <label for="password">Password:</label><br>
+    <input type="text" id="password" name="password"><br><br>
     <input type="submit" value="Submit" id="submit-seminar-config">
   </div>
   <div style="height: 100vh;">
@@ -116,11 +118,13 @@
     let seminarServer = '';
     let seminarRoom = '';
     let seminarHash = '';
+    let seminarPassword = '';
     document.getElementById('submit-seminar-config').addEventListener('click', () => {
-      seminarServer = document.getElementById('server').value;
+      seminarServer = 'http://' + document.getElementById('server').value + ':4433';
       seminarRoom = document.getElementById('room').value;
       seminarHash = document.getElementById('hash').value;
-      if (seminarServer && seminarRoom && seminarHash) {
+      seminarPassword = document.getElementById('password').value;
+      if (seminarServer && seminarRoom && seminarHash && seminarPassword) {
         seminarConfig = true;
         document.getElementById('seminar-config').style.display = 'none';
         document.getElementById('seminar-error').style.display = 'none';
@@ -330,6 +334,9 @@
       Reveal.on('ready', () => {
         document.querySelectorAll('pre code').forEach((el) =>{
         hljs.highlightElement(el);
+        if (seminarConfig) {
+          RevealSeminar.open_or_join_room(seminarPassword, 'Host');
+        }
       }); 
       });
     });
