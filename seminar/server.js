@@ -87,13 +87,13 @@ function deleteUser(id) {
 
 // Run when client connects
 io.on('connection', socket => {
-console.log(`${socket.id} connected`);
+	console.log(`${socket.id} connected`);
 	socket.emit( 'rooms', rooms ); // send list of rooms
 
 	// Create user
 	function createUser(name, callback) {
 		if ( !getUser(socket.id) ) {
-console.log(`${socket.id} checked in with name "${name}"`);
+			console.log(`${socket.id} checked in with name "${name}"`);
 			const user = { id: socket.id, name: name };
 			users.push(user);
 			if ( callback ) callback();
@@ -137,7 +137,7 @@ console.log(`${socket.id} checked in with name "${name}"`);
 
 		if (i !== -1) {
 			// join existing room as host
-console.log(`${socket.id} joins room "${venue}|${name}|${hash}" as host`);
+			console.log(`${socket.id} joins room "${venue}|${name}|${hash}" as host`);
 			hosts[i].push(user);
 			participants[i].push(user);
 			socket.join( label(rooms[i]) );
@@ -147,7 +147,7 @@ console.log(`${socket.id} joins room "${venue}|${name}|${hash}" as host`);
 		}
 		else {
 			// open new room
-console.log(`${socket.id} opens room "${venue}|${name}|${hash}"`);
+			console.log(`${socket.id} opens room "${venue}|${name}|${hash}"`);
 			room = { venue, name, hash };
 			rooms.push(room);
 			hosts.push( [ user ] );
@@ -155,7 +155,7 @@ console.log(`${socket.id} opens room "${venue}|${name}|${hash}"`);
 			socket.join( label(room) );
 			io.emit( 'room_opened', { venue: room.venue, name: room.name } ); // broadcast to everyone
 			socket.emit( 'chair', room ); // tell host to chair the room
-//console.log(rooms, hosts, participants);
+			//console.log(rooms, hosts, participants);
  		}
 
 		if ( callback ) callback();
@@ -171,7 +171,7 @@ console.log(`${socket.id} opens room "${venue}|${name}|${hash}"`);
 			return;
 		}
 
-console.log(`${socket.id} closes room "${rooms[i].venue}|${rooms[i].name}|${rooms[i].hash}"`);
+		console.log(`${socket.id} closes room "${rooms[i].venue}|${rooms[i].name}|${rooms[i].hash}"`);
 		io.to( label(rooms[i]) ).emit( 'kicked_out', rooms[i] ); // send to everyone in room
 		io.emit( 'room_closed', { venue: rooms[i].venue, name: rooms[i].name } ); // broadcast to everyone
 
@@ -190,7 +190,7 @@ console.log(`${socket.id} closes room "${rooms[i].venue}|${rooms[i].name}|${room
 			return false;
 		}
 
-console.log(`${socket.id} enters room "${rooms[i].venue}|${rooms[i].name}|${rooms[i].hash}"`);
+		console.log(`${socket.id} enters room "${rooms[i].venue}|${rooms[i].name}|${rooms[i].hash}"`);
 		const user = getUser(socket.id);
 		if ( !user ) {
 			callback("User not found!");
@@ -236,7 +236,7 @@ console.log(`${socket.id} enters room "${rooms[i].venue}|${rooms[i].name}|${room
 		}
 
 		if ( !hosts[i].length ) {
-console.log(`${socket.id} closes room "${rooms[i].venue}|${rooms[i].name}|${rooms[i].hash}"`);
+			console.log(`${socket.id} closes room "${rooms[i].venue}|${rooms[i].name}|${rooms[i].hash}"`);
 			// close room because user was the last host 
 			socket.broadcast.to( label(rooms[i]) ).emit( 'kicked_out', rooms[i] ); // send to everyone else in room
 			socket.leave( label(rooms[i]) );
@@ -245,7 +245,7 @@ console.log(`${socket.id} closes room "${rooms[i].venue}|${rooms[i].name}|${room
 			deleteRoom(i);
 		}
 		else {
-console.log(`${socket.id} leaves room "${rooms[i].venue}|${rooms[i].name}|${rooms[i].hash}"`);
+			console.log(`${socket.id} leaves room "${rooms[i].venue}|${rooms[i].name}|${rooms[i].hash}"`);
 			socket.leave( label(rooms[i]) );
 			// broadcast to everyone in room
 			io.to( label(rooms[i]) ).emit( 'left_room', { room: rooms[i], user } ); 
