@@ -133,7 +133,6 @@ function convertToMarkdown(content) {
   content.blocks.forEach(block => {
     let text = '';
     block[block.type]?.rich_text?.forEach(blockText => {
-      console.log(blockText);
       let specialColor = false;
       let bold = false;
       let code = false;
@@ -165,6 +164,7 @@ function convertToMarkdown(content) {
           underline = true;
           // Markdown does not have a defined syntax to underline text, 
           // you might want to use HTML tags like <u>...</u>
+          // This works since reveal anyway try to convert the markdown to html
           text += "<u>";
         }
 
@@ -215,6 +215,7 @@ function convertToMarkdown(content) {
         break;
           
       case 'numbered_list_item':
+        console.log(block);
         markdown += '1. ' + text + '\n';
         break;
           
@@ -231,7 +232,7 @@ function convertToMarkdown(content) {
         break;
 
       case 'child_page':
-        //No need
+        // Not needed
         markdown += '';
         break;
 
@@ -240,8 +241,7 @@ function convertToMarkdown(content) {
         break;
 
       case 'image':
-        //Can i even do this? maybe also not needed
-        markdown += '';
+        markdown += '![Alt text](' + block.image.file.url + ')';
         break;
 
       case 'table':

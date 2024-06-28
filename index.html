@@ -5,44 +5,35 @@
   <title>Electron Presentation App</title>
   <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
   <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/league.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .controls {
-      margin-bottom: 20px;
-    }
-    .controls input, .controls select {
-      margin-right: 10px;
-    }
-    .reveal {
-      margin-top: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <div id="api-key-section" class="controls">
-    <input type="text" id="api-key" placeholder="Enter Notion API Key" />
-    <button id="save-key">Save API Key</button>
-  </div>
-  <div class="controls">
-    <select id="notion-pages">
-      <!-- Databases will be populated here -->
-    </select>
-    <button id="generate-presentation">Generate Presentation</button>
-    <button id="save-presentation">Save Presentation</button>
-    <button id="open-stored-presentation">Open Presentation</button>
-  </div>
-  <div>
-    <div class="reveal">
-      <div class="slides">
-        <!-- Just for copy paste into new window -->
+<body id="first-body">
+  <div class="container">
+    <div id="api-key-section" class="controls">
+      <input type="text" id="api-key" placeholder="Enter Notion API Key" class="styled-input-text margin-bottom" name="api-key"/>
+      <label for="api-key" class="styled-form-label">Enter Notion API Key</label>
+      <button id="save-key" class="styled-button">Save API Key</button>
+    </div>
+    <div class="controls">
+      <div class="margin-bottom">
+        <select id="notion-pages" class="styled-dropdown">
+          <!-- Databases will be populated here -->
+        </select>
+      </div>
+      <div class="flex">
+        <button id="generate-presentation" class="styled-button">Generate Presentation</button>
+        <button id="save-presentation" class="styled-button">Save Presentation</button>
+        <button id="open-stored-presentation" class="styled-button">Open Presentation</button>
+      </div>
+    </div>
+    <div>
+      <div class="reveal">
+        <div class="slides">
+          <!-- Just for copy paste into new window -->
+        </div>
       </div>
     </div>
   </div>
-  <script src="node_modules/reveal.js/dist/reveal.js"></script>
-  <script src="node_modules/reveal.js/plugin/markdown/markdown.js"></script>
   <script src="helpers/renderer.js"></script>
 </body>
 </html>

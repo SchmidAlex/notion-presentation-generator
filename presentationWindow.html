@@ -11,35 +11,47 @@
   <link rel="stylesheet" href="node_modules/reveal.js-plugins/customcontrols/style.css">
 
   <!-- Own CSS to add some styling-->
-  <link rel="stylesheet" href="presentationWindow.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <button id="reveal-initialize">Initialize Reveal</button>
-  <button id="start-seminar-server">Start Seminar Server</button>
-  <button id="stop-seminar-server">Stop Seminar Server</button>
-  <div id="seminar-config" class="seminar-config" style="display: none;">
-    <br><p>Please get informations like the hash from: <a href="http://127.0.0.1:4433/">http://127.0.0.1:4433/</a></p>
-    <p id="seminar-error" style="display: none; color:red;">make sure you filled out every field properly</p>
-    <label for="server">Server IP:</label><br>
-    <input type="text" id="server" name="server"><br>
-    <label for="room">Room Name:</label><br>
-    <input type="text" id="room" name="room"><br><br>
-    <label for="hash">Hash:</label><br>
-    <input type="text" id="hash" name="hash"><br><br>
-    <label for="password">Password:</label><br>
-    <input type="text" id="password" name="password"><br><br>
-    <input type="submit" value="Submit" id="submit-seminar-config">
-  </div>
-  <div style="height: 100vh;">
+<body id="first-body">
+  <div id="presentation" style="height: 100vh; display:none;">
     <div class="reveal">
       <div class="slides">
         <!-- Slides will be dynamically generated here -->
       </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="flex">
+      <button id="reveal-initialize" class="styled-button">Initialize Reveal</button>
+      <button id="start-seminar-server" class="styled-button">Start Seminar Server</button>
+      <button id="stop-seminar-server" class="styled-button">Stop Seminar Server</button>
+    </div>
+    <div id="seminar-config" class="seminar-config" style="display: none;">
+      <p class="plaintext">Please get informations like the hash from: <a href="http://127.0.0.1:4433/" target="_blank">http://127.0.0.1:4433/</a></p>
+      <p id="seminar-error" style="display: none; color:red;">Make sure you filled out every field properly</p>
+      
+      <div class="input-wrapper">
+        <input type="text" id="server" name="server" class="styled-input-text margin-bottom" placeholder="Local IP from your machine (without http:// and without port)">
+        <label for="server" class="styled-form-label">Server IP:</label>
+      </div>
+      
+      <div class="input-wrapper">
+        <input type="text" id="room" name="room" class="styled-input-text margin-bottom" placeholder="Enter a name for the room">
+        <label for="room" class="styled-form-label">Room Name:</label>
+      </div>
+      
+      <div class="input-wrapper">
+        <input type="text" id="hash" name="hash" class="styled-input-text margin-bottom" placeholder="Enter the hash from your password">
+        <label for="hash" class="styled-form-label">Hash:</label>
+      </div>
+      
+      <div class="input-wrapper">
+        <input type="text" id="password" name="password" class="styled-input-text margin-bottom" placeholder="Enter the password you created the hash from to join the room">
+        <label for="password" class="styled-form-label">Password:</label>
+      </div>
+      
+      <input type="submit" value="Submit" id="submit-seminar-config" class="styled-button">
     </div>
   </div>
 
@@ -138,6 +150,11 @@
       document.getElementById('start-seminar-server').style.display = 'none';
       document.getElementById('stop-seminar-server').style.display = 'none';
       document.getElementById('seminar-config').style.display = 'none';
+      document.getElementById('presentation').style.display = 'block';
+      document.getElementById('first-body').removeAttribute('id');
+      document.getElementsByClassName('container').forEach((el) =>{
+        el.classList.remove('container');
+      });
 
       const printPlugins = [
         RevealNotes,
@@ -333,11 +350,11 @@
 
       Reveal.on('ready', () => {
         document.querySelectorAll('pre code').forEach((el) =>{
-        hljs.highlightElement(el);
+          hljs.highlightElement(el);
+        });
         if (seminarConfig) {
           RevealSeminar.open_or_join_room(seminarPassword, 'Host');
         }
-      }); 
       });
     });
   </script>
