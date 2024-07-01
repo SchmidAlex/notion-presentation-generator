@@ -111,6 +111,7 @@ const initChart = function(Reveal){
 	}
 
 	function updateChart(canvas, idx, data) {
+		console.log(`This is the data: ${data}`);
 		canvas.chart.data.datasets[idx].data = data;
 		recreateChart( canvas );
 	}
