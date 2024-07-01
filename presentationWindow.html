@@ -346,10 +346,10 @@
         }
       });
 
-      // Fix blurr background because of notescanvas
-      document.getElementById("notescanvas").style.visibility = "hidden";
-
       Reveal.on('ready', () => {
+        // Fix blurr background because of notescanvas
+        document.getElementById("notescanvas").style.visibility = "hidden";
+        
         document.querySelectorAll('pre code').forEach((el) =>{
           hljs.highlightElement(el);
         });
