@@ -155,3 +155,7 @@ p code{
 .input-wrapper{
     position: relative;
 }
+
+.qna.ask {
+  width: calc(100% - 100px)
+}

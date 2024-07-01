@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="helpers/plugins/chalkboard/chalkboardStyle.css">
   <link rel="stylesheet" href="helpers/plugins/chalkboard/fontawesome.css">
   <link rel="stylesheet" href="node_modules/reveal.js-plugins/customcontrols/style.css">
+  <link rel="stylesheet" href="node_modules/reveal.js-plugins/poll/style.css">
+  <link rel="stylesheet" href="node_modules/reveal.js-plugins/questions/style.css">
 
   <!-- Own CSS to add some styling-->
   <link rel="stylesheet" href="styles.css">
@@ -96,8 +98,14 @@
   <script src="node_modules/reveal.js-verticator/plugin/verticator/verticator.js"></script>
 
   <!-- Seminar Plugin -->
-   <script src="node_modules/reveal.js-plugins/seminar/plugin.js"></script>
-   <script src="node_modules/socket.io/client-dist/socket.io.js"></script>
+  <script src="node_modules/reveal.js-plugins/seminar/plugin.js"></script>
+  <script src="node_modules/socket.io/client-dist/socket.io.js"></script>
+
+  <!-- Poll Plugin -->
+  <script src="node_modules/reveal.js-plugins/poll/plugin.js"></script>
+
+  <!-- Questions Plugin -->
+  <script src="node_modules/reveal.js-plugins/questions/plugin.js"></script>
 
   <!-- 
     An list of interesting Plugins for later use maybe:
@@ -178,8 +186,8 @@
         //RevealAudioSlideshow,
         //RevealAudioRecorder,
         RevealCustomControls, 
-        // poll
-        // question
+        RevealPoll,
+        RevealQnA,
         Verticator 
       ]
 
@@ -334,6 +342,12 @@
               icon: '<i class="fa fa-pen"></i>',
               title: 'Toggle notes canvas (C)',
               action: 'RevealChalkboard.toggleNotesCanvas();'
+            },
+            {
+              id: 'toggle-questions',
+              title: 'Toggle Q&A dashboard (Q)',
+              icon: '<span class="fa-stack" style="margin: -24px -12px;padding:0;"><span class="fa-solid fa-comment fa-stack-1x"></span><strong class="fa-stack-1x fa-inverse qna question-counter" style="font-size:0.5em;"></strong></span>',
+              action: 'RevealQnA.toggleQnA();'
             }
           ]
         },
@@ -342,14 +356,14 @@
           url: seminarServer,
           room: seminarRoom,
           hash: seminarHash,
-          autoJoin: true
+          autoJoin: false
         }
       });
 
       Reveal.on('ready', () => {
         // Fix blurr background because of notescanvas
         document.getElementById("notescanvas").style.visibility = "hidden";
-        
+
         document.querySelectorAll('pre code').forEach((el) =>{
           hljs.highlightElement(el);
         });

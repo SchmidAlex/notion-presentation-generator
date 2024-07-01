@@ -34,9 +34,9 @@ socket.addEventListener('message', function(event) {
         //RevealAudioSlideshow,
         //RevealAudioRecorder,
         RevealCustomControls, 
-        // poll
-        // question
         RevealSeminar,
+        RevealPoll,
+        RevealQnA,
         Verticator 
     ];
 
@@ -111,6 +111,12 @@ socket.addEventListener('message', function(event) {
                     icon: '<i class="fa fa-th"></i>',
                     action: 'Reveal.toggleOverview();'
                 },
+                {
+                    id: 'toggle-questions',
+                    title: 'Toggle Q&A dashboard (Q)',
+                    icon: '<span class="fa-stack" style="margin: -24px -12px;padding:0;"><span class="fa-solid fa-comment fa-stack-1x"></span><strong class="fa-stack-1x fa-inverse qna question-counter" style="font-size:0.5em;"></strong></span>',
+                    action: 'RevealQnA.toggleQnA();'
+                }
             ]
         },
         seminar: {
@@ -118,7 +124,7 @@ socket.addEventListener('message', function(event) {
             url: seminarUrl,
             room: seminarRoom,
             hash: seminarHash,
-            autoJoin: true
+            autoJoin: false
         }
     });
 
