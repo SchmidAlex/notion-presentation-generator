@@ -105,22 +105,12 @@ socket.addEventListener('message', function(event) {
         },
         customcontrols: {
             controls: [
-                    {
-                id: 'toggle-overview',
-                title: 'Toggle overview (O)',
-                icon: '<i class="fa fa-th"></i>',
-                action: 'Reveal.toggleOverview();'
-            },
-            {
-                icon: '<i class="fa fa-pen-square"></i>',
-                title: 'Toggle chalkboard (B)',
-                action: 'RevealChalkboard.toggleChalkboard();'
-            },
-            {
-                icon: '<i class="fa fa-pen"></i>',
-                title: 'Toggle notes canvas (C)',
-                action: 'RevealChalkboard.toggleNotesCanvas();'
-            }
+                {
+                    id: 'toggle-overview',
+                    title: 'Toggle overview (O)',
+                    icon: '<i class="fa fa-th"></i>',
+                    action: 'Reveal.toggleOverview();'
+                },
             ]
         },
         seminar: {
@@ -136,6 +126,9 @@ socket.addEventListener('message', function(event) {
         RevealSeminar.join_room('User');
         // Fix blurr background because of notescanvas
         document.getElementById("notescanvas").style.visibility = "hidden";
+        document.querySelectorAll('pre code').forEach((el) =>{
+            hljs.highlightElement(el);
+        });
         socket.close();
     });
 });

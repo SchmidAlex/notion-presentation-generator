@@ -241,7 +241,7 @@ function convertToMarkdown(content) {
         break;
 
       case 'image':
-        markdown += '![Alt text](' + block.image.file.url + ')';
+        markdown += '![Alt text](' + block.image.file.url + ')\n';
         break;
 
       case 'table':
