@@ -131,6 +131,7 @@
     let seminarRoom = '';
     let seminarHash = '';
     let seminarPassword = '';
+    let slides
     document.getElementById('submit-seminar-config').addEventListener('click', () => {
       seminarServer = 'http://' + document.getElementById('server').value + ':4433';
       seminarRoom = document.getElementById('room').value;
@@ -140,6 +141,7 @@
         seminarConfig = true;
         document.getElementById('seminar-config').style.display = 'none';
         document.getElementById('seminar-error').style.display = 'none';
+        slides = document.querySelector('.slides').innerHTML;
       } else {
         document.getElementById('seminar-error').style.display = 'block';
       }
@@ -162,7 +164,6 @@
         RevealMath.MathJax3,
         RevealAnimate,
         RevealChalkboard, 
-        //RevealEmbedTweet,
         RevealChart,
 		  ];
 
@@ -179,7 +180,6 @@
         RevealCustomControls, 
         // poll
         // question
-        // seminar
         Verticator 
       ]
 
@@ -339,6 +339,7 @@
         },
         seminar: {
           server: seminarServer,
+          url: seminarServer,
           room: seminarRoom,
           hash: seminarHash,
           autoJoin: true
@@ -354,6 +355,7 @@
         });
         if (seminarConfig) {
           RevealSeminar.open_or_join_room(seminarPassword, 'Host');
+          ipcRenderer.send('setup-seminar-view', { slides: slides, seminar: {server: seminarServer, url: seminarServer, room: seminarRoom, hash: seminarHash}});
         }
       });
     });

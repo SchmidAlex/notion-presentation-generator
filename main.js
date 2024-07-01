@@ -3,9 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const Store = require('electron-store');
 const { spawn } = require('child_process');
+const WebSocket = require('ws');
 
 const store = new Store();
 let seminarServer;
+let ws;
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -35,6 +37,9 @@ app.on('window-all-closed', () => {
     seminarServer.kill('SIGTERM');
     seminarServer = null;
     console.log('Seminar server stopped')
+  }
+  if (ws && ws._server && ws._server.listening) {
+    ws.close();
   }
   if (process.platform !== 'darwin') {
     app.quit();
@@ -128,6 +133,10 @@ ipcMain.on('start-seminar-server', (event, arg) => {
     console.log('Seminar Server is already running');
   }
 
+  if (ws && ws._server && ws._server.listening) {
+    ws.close();
+  }
+
   event.reply('seminar-server-started');
   
 });
@@ -138,4 +147,16 @@ ipcMain.on('stop-seminar-server', (event, arg) => {
     seminarServer = null;
     console.log('Seminar server stopped')
   }
+
+  if (ws && ws._server && ws._server.listening) {
+    ws.close();
+  }
 });
+
+ipcMain.on('setup-seminar-view', (event, data) => {
+  ws = new WebSocket.Server({host: '0.0.0.0', port: 4434});
+
+  ws.on('connection', function connection(ws) {
+    ws.send(JSON.stringify(data));
+  });
+})
