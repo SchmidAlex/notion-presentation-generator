@@ -14,6 +14,7 @@ app.use('/reveal', express.static(path.join(__dirname, '../node_modules/reveal.j
 app.use('/reveal-plugins', express.static(path.join(__dirname, '../node_modules/reveal.js-plugins')));
 app.use('/reveal-menu', express.static(path.join(__dirname, '../node_modules/reveal.js-menu')));
 app.use('/reveal-verticator', express.static(path.join(__dirname, '../node_modules/reveal.js-verticator')));
+app.use('/reveal-copycode', express.static(path.join(__dirname, '../node_modules/reveal.js-copycode/plugin/copycode')));
 
 app.get('/socket.io.js', (req, res) => {
 	res.sendFile(path.join(__dirname, '../node_modules/socket.io/client-dist/socket.io.js'));

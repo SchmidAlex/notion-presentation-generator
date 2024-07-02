@@ -37,7 +37,8 @@ socket.addEventListener('message', function(event) {
         RevealSeminar,
         RevealPoll,
         RevealQnA,
-        Verticator 
+        Verticator,
+        CopyCode
     ];
 
     Reveal.initialize({
@@ -125,7 +126,36 @@ socket.addEventListener('message', function(event) {
             room: seminarRoom,
             hash: seminarHash,
             autoJoin: false
-        }
+        },
+        copycode: {
+            button: "always",
+            display: "text",
+            text: {
+                copy: "Copy",
+                copied: "Copied!",
+            },
+            plaintextonly: true,
+            timeout: 1000,
+            style: {
+                copybg: "orange",
+                copiedbg: "green",
+                copycolor: "black",
+                copiedcolor: "white",
+                copyborder: "",
+                copiedborder: "",
+                scale: 1,
+                offset: 0,
+                radius: 0
+            },
+            tooltip: true,
+            iconsvg: {
+                copy: '',
+                copied: ''
+            },
+            cssautoload: true,
+            csspath: "",
+            clipboardjspath: ""
+        },
     });
 
     Reveal.on('ready', () => {

@@ -59,6 +59,83 @@ This Electron application allows you to generate dynamic presentations from Noti
 - Electron: Build cross-platform desktop apps with JavaScript, HTML, and CSS.
 - Notion SDK: Official Notion API client for JavaScript.
 - Reveal.js: A framework for easily creating beautiful presentations using HTML.
+- Reveal.js Plugins: I integrated several Plugins into this app to have a nicer look and feel:
+    - RevealNotes
+    - RevealHighlight
+    - RevealMath.MathJax3
+    - RevealAnimate
+    - RevealChalkboard
+    - RevealChart
+    - RevealZoom
+    - RevealSearch
+    - RevealMarkdown
+    - RevealMenu
+    - RevealFullscreen
+    - RevealAnything
+    - RevealCustomControls
+    - RevealPoll
+    - RevealQnA
+    - Verticator
+    - CopyCode
+    - RevealSeminar
+
+## Specialities
+### RevealSeminar
+For those who knows the Seminar-Plugin, know that for that a server is needed where Reveal is running. I integrated the Server as a Subprocess into the app (I call it the "server" in the text), but keep the "host" of the presentation completely seperated. To provide the presentation to the clients the host opens a socket, on which the client from the "server" connects to.
+The socket on the "host" gets closed when:
+- The "host" shutdown the seminar "server"
+- When the "host" starts up the seminar "server" again (before opening again)
+- When the app gets closed
+
+In order to start the "server", a presentation needs to get picked for generating. On the presentation window there are 3 buttons:
+- Initialize Reveal (to show the presentation)
+- Start Seminar server (some configuration is needed)
+- Stop the Seminar server (so you can stop it)
+
+![alt text](readme_images/presentationWindow.png)
+
+When now starting the server, some configuration-fields show up:
+
+![alt text](readme_images/seminarConfig.png)
+
+The IP is the local IP from your host, so clients in the same network can also have a look into the presentation and participate to polls and ask questions and so on.
+
+The Room Name is a desired name of yours, it is needed for the configuration.
+
+The Hash is the Hash from your password, open the link above the config and let the hash generate from your password.
+
+The password is the one, from which you generate your hash from. It is needed so you can open the room and join as host.
+
+**Important:** The host must initialize reveal, before the clients connects.
+
+After the connection a client can enter the room by entering http://[your given IP]:4433/seminar.html in any webbrowser.
+
+### Poll
+Maybe one day it will possible to have a block in notion, which is usable for polls... At the moment it needs to be injected with html-code in the notion notes:
+```
+<div class="poll" data-poll="favoriteColor">
+<p>Was ist deine Lieblingsfarbe?</p>
+<button data-value="Red">Red</button>
+<button data-value="Purple">Purple</button>
+<button data-value="Yellow">Yellow</button>
+<div class="voters" data-poll="favoriteColor">0</div>
+</div>
+```
+
+### Chart
+If using seminar and make a chart out of the answers, please consider the "data-poll" attribute in the poll and in the chart. They must be the same in order to work.
+
+Here the same issue like the poll is present, notion does not have a block like that and no other block is usable for it. Thats why, again, it needs to be injected as html-code:
+```
+<div class="chart-container" style="position: relative; height:650px!important; width:980px!important">
+
+<canvas id="chart" data-chart="bar" data-poll="favoriteColor">,Red,Purple,Yellow
+
+label of data?,0,0,0</canvas>
+
+</div>
+```
+Please also note the "height" and the "width" of the chart-container and change them if needed.
 
 ## Contributing
 Feel free to open issues or submit pull requests. Help or suggestions and contibutions are welcome!

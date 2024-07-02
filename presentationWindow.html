@@ -30,7 +30,7 @@
       <button id="stop-seminar-server" class="styled-button">Stop Seminar Server</button>
     </div>
     <div id="seminar-config" class="seminar-config" style="display: none;">
-      <p class="plaintext">Please get informations like the hash from: <a href="http://127.0.0.1:4433/" target="_blank">http://127.0.0.1:4433/</a></p>
+      <p class="plaintext">Get the hash from: <a href="http://127.0.0.1:4433/" target="_blank">http://127.0.0.1:4433/</a></p>
       <p id="seminar-error" style="display: none; color:red;">Make sure you filled out every field properly</p>
       
       <div class="input-wrapper">
@@ -49,7 +49,7 @@
       </div>
       
       <div class="input-wrapper">
-        <input type="text" id="password" name="password" class="styled-input-text margin-bottom" placeholder="Enter the password you created the hash from to join the room">
+        <input type="password" id="password" name="password" class="styled-input-text margin-bottom" placeholder="Enter the password you created the hash from to join the room">
         <label for="password" class="styled-form-label">Password:</label>
       </div>
       
@@ -107,15 +107,11 @@
   <!-- Questions Plugin -->
   <script src="node_modules/reveal.js-plugins/questions/plugin.js"></script>
 
+  <!-- CopyCode Plugin -->
+  <script src="node_modules/reveal.js-copycode/plugin/copycode/copycode.js"></script>
+
   <!-- 
     An list of interesting Plugins for later use maybe:
-      - RevealEmbedTweet
-      - Seminar (https://github.com/rajgoel/reveal.js-plugins/tree/master/seminar)
-      - Poll (https://github.com/rajgoel/reveal.js-plugins/tree/master/poll) -> Based on seminar
-      - Questions (https://github.com/rajgoel/reveal.js-plugins/tree/master/questions) -> Based on questions
-      - RevealEditor (https://github.com/ctangel/RevealEditor)
-      - CopyCode (https://github.com/Martinomagnifico/reveal.js-copycode)
-
   -->
 
   
@@ -188,7 +184,8 @@
         RevealCustomControls, 
         RevealPoll,
         RevealQnA,
-        Verticator 
+        Verticator,
+        CopyCode
       ]
 
       if (seminarConfig) {
@@ -357,7 +354,36 @@
           room: seminarRoom,
           hash: seminarHash,
           autoJoin: false
-        }
+        },
+        copycode: {
+          button: "always",
+          display: "text",
+          text: {
+              copy: "Copy",
+              copied: "Copied!",
+          },
+          plaintextonly: true,
+          timeout: 1000,
+          style: {
+              copybg: "orange",
+              copiedbg: "green",
+              copycolor: "black",
+              copiedcolor: "white",
+              copyborder: "",
+              copiedborder: "",
+              scale: 1,
+              offset: 0,
+              radius: 0
+          },
+          tooltip: true,
+          iconsvg: {
+              copy: '',
+              copied: ''
+          },
+          cssautoload: true,
+          csspath: "",
+          clipboardjspath: ""
+        },
       });
 
       Reveal.on('ready', () => {
