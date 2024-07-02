@@ -4,9 +4,9 @@ const fs = require('fs');
 const Store = require('electron-store');
 const { spawn } = require('child_process');
 const WebSocket = require('ws');
+const seminarServer = require('./seminar/server');
 
 const store = new Store();
-let seminarServer;
 let ws;
 
 function createWindow() {
@@ -33,10 +33,8 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
-  if (seminarServer) {
-    seminarServer.kill('SIGTERM');
-    seminarServer = null;
-    console.log('Seminar server stopped')
+  if (seminarServer.getServerRunning()) {
+    seminarServer.stop();
   }
   if (ws && ws._server && ws._server.listening) {
     ws.close();
@@ -123,15 +121,12 @@ ipcMain.handle('electron-store-set-data', (event, key, value) => {
 });
 
 ipcMain.on('start-seminar-server', (event, arg) => {
-  if (!seminarServer) {
-    seminarServer = spawn('node', ['seminar/server.js'], { stdio: 'inherit' });
-    seminarServer.on('close', (code) => {
-      console.log(`Seminar Server exited with code ${code}`);
-    });
-    console.log('Seminar Server started');
-  } else {
-    console.log('Seminar Server is already running');
+  if (seminarServer.getServerRunning()) {
+    seminarServer.stop();
   }
+
+  seminarServer.start();
+  console.log('Seminar Server started');
 
   if (ws && ws._server && ws._server.listening) {
     ws.close();
@@ -142,9 +137,8 @@ ipcMain.on('start-seminar-server', (event, arg) => {
 });
 
 ipcMain.on('stop-seminar-server', (event, arg) => {
-  if (seminarServer) {
-    seminarServer.kill('SIGTERM');
-    seminarServer = null;
+  if (seminarServer.getServerRunning()) {
+    seminarServer.stop();
     console.log('Seminar server stopped')
   }
 

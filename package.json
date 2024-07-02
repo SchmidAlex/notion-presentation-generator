@@ -1,14 +1,15 @@
 {
-  "name": "notion-presentation-generator",
+  "name": "Notion Presentation Generator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Electron App which consumes the API from Notion and so generate presentations of it",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "package-win": "electron-packager . \"Notion Presentation Generator\" --platform=win32 --arch=x64 --out=win --overwrite --app-version=\"1.0.0\"",
+    "package-mac": "electron-packager . \"Notion Presentation Generator\" --platform=darwin --arch=x64 --out=mac --overwrite --app-version=\"1.0.0\""
   },
   "keywords": [],
-  "author": "",
+  "author": "Alexander Schmid",
   "license": "ISC",
   "devDependencies": {
     "electron": "^30.0.6",

@@ -1,3 +1,6 @@
+win/
+mac/
+
 # Logs
 logs
 *.log

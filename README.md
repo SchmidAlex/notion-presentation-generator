@@ -137,5 +137,16 @@ label of data?,0,0,0</canvas>
 ```
 Please also note the "height" and the "width" of the chart-container and change them if needed.
 
+## Want to change something and package it by urself?
+Clone the repo and make the changes you want. Build it you can use for windows this command:
+```
+npm run package-win
+```
+And for Mac you can use:
+```
+npm run package-mac
+```
+Keep in mind, that i did not test the application with mac.
+
 ## Contributing
 Feel free to open issues or submit pull requests. Help or suggestions and contibutions are welcome!

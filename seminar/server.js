@@ -7,7 +7,7 @@ const moment = require('moment');
 var cors = require('cors');
 const app = express();
 app.use(cors({ credentials: true, origin: true }));
-// Set root for URL
+
 app.use(express.static(path.join(__dirname, '/www/')));
 app.use('/helpers', express.static(path.join(__dirname, '../helpers')));
 app.use('/reveal', express.static(path.join(__dirname, '../node_modules/reveal.js')));
@@ -388,5 +388,26 @@ io.on('connection', socket => {
 });
 
 const PORT = process.env.PORT || 4433;
+let serverRunning = false
 
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+function start() {
+	server.listen(PORT, () => {
+		serverRunning = true;
+		console.log(`Server running on port ${PORT}`);
+	});
+}
+
+function stop(){
+	if(serverRunning) {
+		server.close(() => {
+			serverRunning = false;
+			console.log('Server stopped');
+		});
+	}
+}
+
+function getServerRunning(){
+	return serverRunning;
+}
+
+module.exports = { start, stop, getServerRunning };
