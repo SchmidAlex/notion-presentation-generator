@@ -1,12 +1,32 @@
 {
-  "name": "Notion Presentation Generator",
+  "name": "NotionPresentationGenerator",
   "version": "1.0.0",
   "description": "Electron App which consumes the API from Notion and so generate presentations of it",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "package-win": "electron-packager . \"Notion Presentation Generator\" --platform=win32 --arch=x64 --out=win --overwrite --app-version=\"1.0.0\"",
-    "package-mac": "electron-packager . \"Notion Presentation Generator\" --platform=darwin --arch=x64 --out=mac --overwrite --app-version=\"1.0.0\""
+    "package-mac": "electron-packager . \"Notion Presentation Generator\" --platform=darwin --arch=x64 --out=mac --overwrite --app-version=\"1.0.0\"",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "notion-presentation-generator",
+    "productName": "NotionPresentationGenerator",
+    "files": [
+      "helpers/**/*",
+      "index.html",
+      "main.js",
+      "presentationWindow.html",
+      "styles.css",
+      "seminar/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
   },
   "keywords": [],
   "author": "Alexander Schmid",
