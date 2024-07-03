@@ -13,6 +13,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'helpers', 'preload.js'),
       contextIsolation: true,
@@ -22,6 +23,24 @@ function createWindow() {
   });
 
   win.loadFile('index.html');
+
+  ipcMain.on('minimize-window', () => {
+    win.minimize();
+  });
+
+  ipcMain.on('close-window', () => {
+    win.close();
+  });
+
+  ipcMain.on('maximize-restore-window', () => {
+    if (win.isMaximized()) {
+      win.unmaximize();
+      win.webContents.send('window-unmaximized');
+    } else {
+      win.maximize();
+      win.webContents.send('window-maximized');
+    }
+  });
 }
 
 app.whenReady().then(() => {
@@ -84,15 +103,38 @@ ipcMain.handle('open-presentation', (event, htmlSlidesContent) => {
   const presentationWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,
     webPreferences: {
-      contextIsolation: false,
+      contextIsolation: true,
       enableRemoteModule: true,
       sandbox: false,
-      nodeIntegration: true
+      nodeIntegration: true,
+      preload: path.join(__dirname, 'helpers', 'preload.js')
     }
   });
   
   presentationWindow.loadFile('presentationWindow.html');
+
+  ipcMain.on('presentation-minimize-window', () => {
+    presentationWindow.minimize();
+  });
+
+  ipcMain.on('presentation-close-window', () => {
+    presentationWindow.close();
+    ipcMain.removeAllListeners('presentation-minimize-window');
+    ipcMain.removeAllListeners('presentation-maximize-restore-window');
+    ipcMain.removeAllListeners('presentation-close-window');
+  });
+
+  ipcMain.on('presentation-maximize-restore-window', () => {
+    if (presentationWindow.isMaximized()) {
+      presentationWindow.unmaximize();
+      presentationWindow.webContents.send('window-unmaximized');
+    } else {
+      presentationWindow.maximize();
+      presentationWindow.webContents.send('window-maximized');
+    }
+  });
 
   presentationWindow.webContents.on('dom-ready', async () => {
     presentationWindow.focus();
@@ -136,7 +178,7 @@ ipcMain.on('start-seminar-server', (event, arg) => {
   
 });
 
-ipcMain.on('stop-seminar-server', (event, arg) => {
+ipcMain.handle('stop-seminar-server', (event, arg) => {
   if (seminarServer.getServerRunning()) {
     seminarServer.stop();
     console.log('Seminar server stopped')
@@ -147,7 +189,7 @@ ipcMain.on('stop-seminar-server', (event, arg) => {
   }
 });
 
-ipcMain.on('setup-seminar-view', (event, data) => {
+ipcMain.handle('setup-seminar-view', (event, data) => {
   ws = new WebSocket.Server({host: '0.0.0.0', port: 4434});
 
   ws.on('connection', function connection(ws) {

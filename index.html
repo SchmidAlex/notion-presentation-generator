@@ -2,12 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Electron Presentation App</title>
+  <title>Notion Presentation Generator</title>
   <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
   <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/league.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body id="first-body">
+  <div class="titlebar">
+    <div>Notion Presentation Generator</div>
+    <div class="buttons">
+      <button onclick="window.api.minimizeWindow()"><i class="gg-ghost-character"></i></button>
+      <button id="maximizeRestoreButton" onclick="window.api.maximizeRestoreWindow()"><i class="gg-maximize-alt"></i></button>
+      <button onclick="window.api.closeWindow()"><i class="gg-close-r"></i></button>
+    </div>
+  </div>
   <div class="container">
     <div id="api-key-section" class="controls">
       <input type="text" id="api-key" placeholder="Enter Notion API Key" class="styled-input-text margin-bottom" name="api-key"/>
@@ -35,5 +43,14 @@
     </div>
   </div>
   <script src="helpers/renderer.js"></script>
+  <script>
+    window.api.onMaximize(() => {
+      document.getElementById('maximizeRestoreButton').innerHTML = '\<i class="gg-minimize-alt"\>\</i\>';
+    });
+
+    window.api.onUnmaximize(() => {
+      document.getElementById('maximizeRestoreButton').innerHTML = '\<i class="gg-maximize-alt"\>\</i\>';
+    });
+  </script>
 </body>
 </html>

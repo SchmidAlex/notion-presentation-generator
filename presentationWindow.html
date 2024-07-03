@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Electron Presentation App</title>
+  <title>Notion Presentator</title>
   <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
   <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/league.css">
   <link rel="stylesheet" href="node_modules/reveal.js/plugin/highlight/zenburn.css">
@@ -16,6 +16,14 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body id="first-body">
+  <div class="titlebar" id="titlebar">
+    <div>Notion Presentator</div>
+    <div class="buttons">
+      <button onclick="window.api.minimizePresentationWindow()"><i class="gg-ghost-character"></i></button>
+      <button id="maximizeRestoreButton" onclick="window.api.maximizeRestorePresentationWindow()"><i class="gg-maximize-alt"></i></button>
+      <button onclick="window.api.closePresentationWindow()"><i class="gg-close-r"></i></button>
+    </div>
+  </div>
   <div id="presentation" style="height: 100vh; display:none;">
     <div class="reveal">
       <div class="slides">
@@ -26,8 +34,8 @@
   <div class="container">
     <div class="flex">
       <button id="reveal-initialize" class="styled-button">Initialize Reveal</button>
-      <button id="start-seminar-server" class="styled-button">Start Seminar Server</button>
-      <button id="stop-seminar-server" class="styled-button">Stop Seminar Server</button>
+      <button id="start-seminar-server" class="styled-button" onclick="window.api.startSeminarServer()">Start Seminar Server</button>
+      <button id="stop-seminar-server" class="styled-button" onclick="window.api.stopSeminarServer()">Stop Seminar Server</button>
     </div>
     <div id="seminar-config" class="seminar-config" style="display: none;">
       <p class="plaintext">Get the hash from: <a href="http://127.0.0.1:4433/" target="_blank">http://127.0.0.1:4433/</a></p>
@@ -116,26 +124,34 @@
 
   
   <script>
-    const { ipcRenderer } = require('electron');
-
-    document.getElementById('start-seminar-server').addEventListener('click', () => {
-      ipcRenderer.send('start-seminar-server');
-    });
-    
-    document.getElementById('stop-seminar-server').addEventListener('click', () => {
-      ipcRenderer.send('stop-seminar-server');
-    });
-
-    ipcRenderer.on('seminar-server-started', (event) => {
-      document.getElementById('seminar-config').style.display = 'block';
-    });
-
     let seminarConfig = false;
     let seminarServer = '';
     let seminarRoom = '';
     let seminarHash = '';
     let seminarPassword = '';
     let slides
+    let fullscreen = false;
+
+    window.api.onMaximizePresentation(() => {
+      document.getElementById('maximizeRestoreButton').innerHTML = '\<i class="gg-minimize-alt"\>\</i\>';
+    });
+
+    window.api.onUnmaximizePresentation(() => {
+      document.getElementById('maximizeRestoreButton').innerHTML = '\<i class="gg-maximize-alt"\>\</i\>';
+    });
+
+    window.api.onSeminarServerStarted(() => {
+      document.getElementById('seminar-config').style.display = 'block';
+    });
+
+    document.addEventListener('fullscreenchange', function() {
+      if (document.fullscreenElement) {
+        document.getElementById('titlebar').style.display = 'none';
+      } else {
+        document.getElementById('titlebar').style.display = 'flex';
+      }
+    });
+
     document.getElementById('submit-seminar-config').addEventListener('click', () => {
       seminarServer = 'http://' + document.getElementById('server').value + ':4433';
       seminarRoom = document.getElementById('room').value;
@@ -324,7 +340,7 @@
         },
         customcontrols: {
           controls: [
-                  {
+            {
               id: 'toggle-overview',
               title: 'Toggle overview (O)',
               icon: '<i class="fa fa-th"></i>',
@@ -395,8 +411,22 @@
         });
         if (seminarConfig) {
           RevealSeminar.open_or_join_room(seminarPassword, 'Host');
-          ipcRenderer.send('setup-seminar-view', { slides: slides, seminar: {server: seminarServer, url: seminarServer, room: seminarRoom, hash: seminarHash}});
+
+          window.api.onSeminarServerStarted(() => {
+            document.getElementById('seminar-config').style.display = 'block';
+          });
+          window.api.setupSeminarView({ slides: slides, seminar: {server: seminarServer, url: seminarServer, room: seminarRoom, hash: seminarHash}});
         }
+        document.dispatchEvent(
+          new KeyboardEvent(
+            'keydown', {
+              bubbles: true, 
+              cancelable: true, 
+              key: String.fromCharCode(70), 
+              keyCode: 70,
+            }
+          )
+        );
       });
     });
   </script>
