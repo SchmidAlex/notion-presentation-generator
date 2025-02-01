@@ -332,3 +332,11 @@ p code{
   right: -5px;
   transform: rotate(-45deg)
 }
+
+.poll button.selected {
+  background-color: #4CAF50 !important; /* Green background for selected options */
+  color: white !important;
+  border-color: #388E3C;
+  box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.6);
+  font-weight: bold;
+}

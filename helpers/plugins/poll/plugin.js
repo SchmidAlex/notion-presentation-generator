@@ -65,10 +65,6 @@ const initPoll = function (Reveal) {
                     const button = evt.target;
                     const poll = button.parentElement;
 
-                    if (button.classList.contains("selected")) {
-                        return;
-                    }
-
                     if (evt.target.parentElement.getAttribute("data-multi")) {
                         // Toggle selection for multi-select
                         button.classList.toggle("selected");
@@ -142,10 +138,10 @@ const initPoll = function (Reveal) {
 					poll.votes[choice] = (poll.votes[choice] || 0) + 1;
 				});
 	
-				// Only count the voter once per poll
-				// Only count unique voters
-				if (!previousVotes.length) {
-					poll.voters++; // Only increase if it's the first vote from this user
+				if (previousVotes.length === 0 && vote.choices.length > 0) {
+					poll.voters++; // Increase only if the user is voting for the first time
+				} else if (previousVotes.length > 0 && vote.choices.length === 0) {
+					poll.voters--; // Decrease if the user removes all selections
 				}
 	
 				// Broadcast updated voter count and results
